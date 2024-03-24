@@ -17,8 +17,8 @@ Arizzble_FreecamTools_SnappyMovement = false;
 Arizzble_FreecamTools_SnappyRotation = false;
 Arizzble_FreecamTools_PositionLerpFactor = 5.0;
 Arizzble_FreecamTools_RotationLerpFactor = 7.5;
-Arizzble_FreecamTools_PositionIncrementDefault = 0.015;
-Arizzble_FreecamTools_PositionIncrementShift = 0.15;
+Arizzble_FreecamTools_PositionIncrementDefault = 0.025;
+Arizzble_FreecamTools_PositionIncrementShift = 0.20;
 
 --Freecam_keycodes_W = 87
 --Freecam_keycodes_S = 83
@@ -27,7 +27,18 @@ Arizzble_FreecamTools_PositionIncrementShift = 0.15;
 --Freecam_keycodes_Q = 81
 --Freecam_keycodes_E = 69
 
---CREATE THE NEW CAMERA WHEN SCENE LOADED
+Custom_NumberLerp = function(a, b, t)
+    return a + (b - a) * t;
+end
+
+Custom_VectorLerp = function(a, b, t)
+    local newX = Custom_NumberLerp(a.x, b.x, t);
+    local newY = Custom_NumberLerp(a.y, b.y, t);
+    local newZ = Custom_NumberLerp(a.z, b.z, t);
+    
+    return Vector(newX, newY, newZ);
+end
+
 Arizzble_FreecamTools_CreateFreeCamera = function()
     local cam_prop = "module_camera.prop"
     
@@ -40,7 +51,7 @@ Arizzble_FreecamTools_CreateFreeCamera = function()
     AgentSetProperty(Arizzble_FreecamTools_CameraName, "Clip Plane - Near", 0.05, Custom_CutsceneDev_SceneObject)
     AgentSetProperty(Arizzble_FreecamTools_CameraName, "Lens - Current Lens", nil, Custom_CutsceneDev_SceneObject)
 
-    --Custom_RemovingAgentsWithPrefix(sceneObj, "cam_")
+    Custom_RemovingAgentsWithPrefix(sceneObj, "cam_")
 
     CameraPush(Arizzble_FreecamTools_CameraName);
 end
