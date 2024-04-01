@@ -17,8 +17,8 @@ Arizzble_FreecamTools_SnappyMovement = false;
 Arizzble_FreecamTools_SnappyRotation = false;
 Arizzble_FreecamTools_PositionLerpFactor = 5.0;
 Arizzble_FreecamTools_RotationLerpFactor = 7.5;
-Arizzble_FreecamTools_PositionIncrementDefault = 0.025;
-Arizzble_FreecamTools_PositionIncrementShift = 0.20;
+Arizzble_FreecamTools_PositionIncrementDefault = 0.015;
+Arizzble_FreecamTools_PositionIncrementShift = 0.15;
 
 --Freecam_keycodes_W = 87
 --Freecam_keycodes_S = 83
@@ -27,18 +27,7 @@ Arizzble_FreecamTools_PositionIncrementShift = 0.20;
 --Freecam_keycodes_Q = 81
 --Freecam_keycodes_E = 69
 
-Custom_NumberLerp = function(a, b, t)
-    return a + (b - a) * t;
-end
-
-Custom_VectorLerp = function(a, b, t)
-    local newX = Custom_NumberLerp(a.x, b.x, t);
-    local newY = Custom_NumberLerp(a.y, b.y, t);
-    local newZ = Custom_NumberLerp(a.z, b.z, t);
-    
-    return Vector(newX, newY, newZ);
-end
-
+--CREATE THE NEW CAMERA WHEN SCENE LOADED
 Arizzble_FreecamTools_CreateFreeCamera = function()
     local cam_prop = "module_camera.prop"
     
@@ -51,7 +40,7 @@ Arizzble_FreecamTools_CreateFreeCamera = function()
     AgentSetProperty(Arizzble_FreecamTools_CameraName, "Clip Plane - Near", 0.05, Custom_CutsceneDev_SceneObject)
     AgentSetProperty(Arizzble_FreecamTools_CameraName, "Lens - Current Lens", nil, Custom_CutsceneDev_SceneObject)
 
-    Custom_RemovingAgentsWithPrefix(sceneObj, "cam_")
+    --Custom_RemovingAgentsWithPrefix(sceneObj, "cam_")
 
     CameraPush(Arizzble_FreecamTools_CameraName);
 end
@@ -102,36 +91,36 @@ Arizzble_FreecamTools_UpdateFreeCamera = function()
     TempPos.y = TempPos.y - positionIncrement;
     AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject);
   end
- ---------------------ROTATION
+ ---------------------ROTATION---- OLD
 
-   if Input_IsVKeyPressed(38) then --left arrow key
-   TempRot = AgentGetWorldRot(Arizzble_FreecamTools_CameraName);
-    TempRot.x = TempRot.x + positionIncrement;
-    AgentSetWorldRot(Arizzble_FreecamTools_CameraName, TempRot, Custom_CutsceneDev_SceneObject);
-  end
+   --if Input_IsVKeyPressed(40) then --left arrow key
+   --TempRot = AgentGetWorldRot(Arizzble_FreecamTools_CameraName);
+    --TempRot.x = TempRot.x + positionIncrement;
+    --AgentSetWorldRot(Arizzble_FreecamTools_CameraName, TempRot, Custom_CutsceneDev_SceneObject);
+  --end
 
-  if Input_IsVKeyPressed(40) then --right arrow key
-   TempRot = AgentGetWorldRot(Arizzble_FreecamTools_CameraName);
-    TempRot.x = TempRot.x - positionIncrement;
-    AgentSetWorldRot(Arizzble_FreecamTools_CameraName, TempRot, Custom_CutsceneDev_SceneObject);
-  end
+  --if Input_IsVKeyPressed(38) then --right arrow key
+   --TempRot = AgentGetWorldRot(Arizzble_FreecamTools_CameraName);
+    --TempRot.x = TempRot.x - positionIncrement;
+    --AgentSetWorldRot(Arizzble_FreecamTools_CameraName, TempRot, Custom_CutsceneDev_SceneObject);
+  --end
 
-  if Input_IsVKeyPressed(37) then --up arrow key
-   TempRot = AgentGetWorldRot(Arizzble_FreecamTools_CameraName);
-    TempRot.y = TempRot.y + positionIncrement;
-    AgentSetWorldRot(Arizzble_FreecamTools_CameraName, TempRot, Custom_CutsceneDev_SceneObject);
-  end
+  --if Input_IsVKeyPressed(37) then --up arrow key
+   --TempRot = AgentGetWorldRot(Arizzble_FreecamTools_CameraName);
+    --TempRot.y = TempRot.y + positionIncrement;
+    --AgentSetWorldRot(Arizzble_FreecamTools_CameraName, TempRot, Custom_CutsceneDev_SceneObject);
+  --end
 
-  if Input_IsVKeyPressed(39) then --down arrow key
-   TempRot = AgentGetWorldRot(Arizzble_FreecamTools_CameraName);
-    TempRot.y = TempRot.y - positionIncrement;
-    AgentSetWorldRot(Arizzble_FreecamTools_CameraName, TempRot, Custom_CutsceneDev_SceneObject);
-  end
+  --if Input_IsVKeyPressed(39) then --down arrow key
+   --TempRot = AgentGetWorldRot(Arizzble_FreecamTools_CameraName);
+    --TempRot.y = TempRot.y - positionIncrement;
+    --AgentSetWorldRot(Arizzble_FreecamTools_CameraName, TempRot, Custom_CutsceneDev_SceneObject);
+  --end
   --ROTATION POS RESET (CBA)
-  if Input_IsVKeyPressed(101) then --5 num key
-    RotReset = Vector(0,0,0)
-    AgentSetWorldRot(Arizzble_FreecamTools_CameraName, RotReset, Custom_CutsceneDev_SceneObject);
-  end
+  --if Input_IsVKeyPressed(101) then --5 num key
+    --RotReset = Vector(0,0,0)
+    --AgentSetWorldRot(Arizzble_FreecamTools_CameraName, RotReset, Custom_CutsceneDev_SceneObject);
+  --end
  -------------------FOV
 
  ---REMEMBER THE VALUES
@@ -166,14 +155,37 @@ Arizzble_FreecamTools_UpdateFreeCamera = function()
     else
         AgentSetProperty(Arizzble_FreecamTools_CameraName, "Field of View", Arizzble_FreecamTools_InputFieldOfViewAmount, Custom_CutsceneDev_SceneObject);
     end
+
+    ------------------------------MOUSELOOK FOR ROTATION
+    local currCursorPos = CursorGetPos()
+    
+    local minThreshold = 0.01
+    local maxThreshold = 0.99
+    
+    --reset the cursor pos to the center of the screen when they get near the edges of the screen
+    if (currCursorPos.x > maxThreshold) or (currCursorPos.x < minThreshold) or (currCursorPos.y > maxThreshold) or (currCursorPos.y < minThreshold) then
+        CursorSetPos(Vector(0.5, 0.5, 0));
+    end
+    
+    local xCursorDifference = currCursorPos.x - Arizzble_FreecamTools_PrevCursorPos.x
+    local yCursorDifference = currCursorPos.y - Arizzble_FreecamTools_PrevCursorPos.y
+    
+    local sensitivity = 180.0
+    Arizzble_FreecamTools_InputMouseAmountX = Arizzble_FreecamTools_InputMouseAmountX - (xCursorDifference * sensitivity)
+    Arizzble_FreecamTools_InputMouseAmountY = Arizzble_FreecamTools_InputMouseAmountY + (yCursorDifference * sensitivity)
+
+    local newRotation = Vector(Arizzble_FreecamTools_InputMouseAmountY - 90, Arizzble_FreecamTools_InputMouseAmountX, 0);
+    
+    if newRotation.x > 90 then
+        newRotation.x = 90;
+    elseif newRotation.x < -90 then
+        newRotation.x = -90;
+    end
+
+    Arizzble_FreecamTools_PrevCamRot = newRotation
+    AgentSetWorldRot(Arizzble_FreecamTools_CameraName, Arizzble_FreecamTools_PrevCamRot, Custom_CutsceneDev_SceneObject);
+    Arizzble_FreecamTools_PrevCursorPos = CursorGetPos();
 end
-
-
-
-
-
-
-
 
 
 
@@ -254,17 +266,17 @@ Arizzble_FreecamTools_UpdateFreeCamera_Old = function()
     ------------------------------BUILD FINAL MOVEMENT/ROTATION------------------------------
     local newPosition = Vector(Arizzble_FreecamTools_InputHorizontalValue, Arizzble_FreecamTools_InputHeightValue, Arizzble_FreecamTools_InputVerticalValue);
 
-    --if (Arizzble_FreecamTools_SnappyMovement == true) then
-    --    Arizzble_FreecamTools_PrevCamPos = newPosition;
-    --else
-    --    Arizzble_FreecamTools_PrevCamPos = Custom_VectorLerp(Arizzble_FreecamTools_PrevCamPos, newPosition, currFrameTime * Arizzble_FreecamTools_PositionLerpFactor);
-    --end
+    if (Arizzble_FreecamTools_SnappyMovement == true) then
+        Arizzble_FreecamTools_PrevCamPos = newPosition;
+     --else
+        --Arizzble_FreecamTools_PrevCamPos = Custom_VectorLerp(Arizzble_FreecamTools_PrevCamPos, newPosition, currFrameTime * Arizzble_FreecamTools_PositionLerpFactor);
+    end
     
-    --if (Arizzble_FreecamTools_SnappyRotation == true) then
-    --    Arizzble_FreecamTools_PrevCamRot = newRotation;
-    --else
-    --    Arizzble_FreecamTools_PrevCamRot = Custom_VectorLerp(Arizzble_FreecamTools_PrevCamRot, newRotation, currFrameTime * Arizzble_FreecamTools_RotationLerpFactor);
-    --end
+    if (Arizzble_FreecamTools_SnappyRotation == true) then
+        Arizzble_FreecamTools_PrevCamRot = newRotation;
+     --else
+        --Arizzble_FreecamTools_PrevCamRot = Custom_VectorLerp(Arizzble_FreecamTools_PrevCamRot, newRotation, currFrameTime * Arizzble_FreecamTools_RotationLerpFactor);
+    end
     
     ------------------------------ASSIGNMENT------------------------------
     local myCameraAgent = AgentFindInScene(Arizzble_FreecamTools_CameraName, Custom_CutsceneDev_SceneObject); --Agent type
