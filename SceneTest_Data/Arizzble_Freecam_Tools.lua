@@ -45,6 +45,28 @@ Arizzble_FreecamTools_CreateFreeCamera = function()
     CameraPush(Arizzble_FreecamTools_CameraName);
 end
 
+-- Helper function to convert Euler angles to a direction vector
+function EulerToDirectionVector(euler)
+    local radX = math.rad(-euler.x)
+    local radY = math.rad(-euler.y)
+    local radZ = math.rad(-euler.z)
+
+    local cosX = math.cos(radX)
+    local sinX = math.sin(radX)
+    local cosY = math.cos(radY)
+    local sinY = math.sin(radY)
+    local cosZ = math.cos(radZ)
+    local sinZ = math.sin(radZ)
+
+    local direction = {}
+    direction.x = cosY * cosZ
+    direction.y = sinX * sinY * cosZ - cosX * sinZ
+    direction.z = cosX * sinY * cosZ + sinX * sinZ
+
+    return direction
+end
+
+
 ----WHAT IF I USED MAWRAK'S METHOD TO OBJECTS MOVING FUNCTION
 Arizzble_FreecamTools_UpdateFreeCamera = function()
  ----------------MOVEMENT
@@ -56,29 +78,46 @@ Arizzble_FreecamTools_UpdateFreeCamera = function()
       positionIncrement = Arizzble_FreecamTools_PositionIncrementShift;
    end
 
-  if Input_IsVKeyPressed(65) then --a key
-   TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName);
-    TempPos.x = TempPos.x + positionIncrement;
-    AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject);
-  end
-  
-  if Input_IsVKeyPressed(68) then --d key
-   TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName);
-    TempPos.x = TempPos.x - positionIncrement;
-    AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject);
-  end
+if Input_IsVKeyPressed(65) then --a key
 
-  if Input_IsVKeyPressed(87) then --w key
-   TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName);
-    TempPos.z = TempPos.z + positionIncrement;
-    AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject);
-  end
+    local TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName)
+    local TempRot = AgentGetRot(Arizzble_FreecamTools_CameraName)
+    local direction = EulerToDirectionVector(TempRot)
+    TempPos.x = TempPos.x + direction.x * positionIncrement
+    TempPos.y = TempPos.y
+    TempPos.z = TempPos.z + direction.z * positionIncrement
+    AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject)
+end
 
-  if Input_IsVKeyPressed(83) then --s key
-   TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName);
-    TempPos.z = TempPos.z - positionIncrement;
-    AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject);
-  end
+if Input_IsVKeyPressed(68) then --d key
+    local TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName)
+    local TempRot = AgentGetRot(Arizzble_FreecamTools_CameraName)
+    local direction = EulerToDirectionVector(TempRot)
+    TempPos.x = TempPos.x - direction.x * positionIncrement
+    TempPos.y = TempPos.y
+    TempPos.z = TempPos.z - direction.z * positionIncrement
+    AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject)
+end
+
+if Input_IsVKeyPressed(87) then --w key
+    local TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName)
+    local TempRot = AgentGetRot(Arizzble_FreecamTools_CameraName)
+    local direction = EulerToDirectionVector(TempRot)
+    TempPos.x = TempPos.x - direction.z * positionIncrement
+    TempPos.y = TempPos.y
+    TempPos.z = TempPos.z + direction.x * positionIncrement
+    AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject)
+end
+
+if Input_IsVKeyPressed(83) then --s key
+    local TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName)
+    local TempRot = AgentGetRot(Arizzble_FreecamTools_CameraName)
+    local direction = EulerToDirectionVector(TempRot)
+    TempPos.x = TempPos.x + direction.z * positionIncrement
+    TempPos.y = TempPos.y
+    TempPos.z = TempPos.z - direction.x * positionIncrement
+    AgentSetPos(Arizzble_FreecamTools_CameraName, TempPos, Custom_CutsceneDev_SceneObject)
+end
 
   if Input_IsVKeyPressed(69) then --e key
    TempPos = AgentGetPos(Arizzble_FreecamTools_CameraName);
